@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QVector>
+#include <memory>
+#include <thread>
 
 struct ToDoItem
 {
@@ -20,6 +22,9 @@ public:
 
     bool setItemAt(int index, const ToDoItem &item);
 
+    void runThread();
+    void stopThread();
+
 signals:
     void preItemAppended();
     void postItemAppended();
@@ -32,7 +37,16 @@ public slots:
     void removeCompletedItems();
 
 private:
+    bool    mTerminateThread;
+    std::shared_ptr<std::thread> mThread;
     QVector<ToDoItem> mItems;
+
+    // Thread Method
+    void execute ();
+
+signals:
+    void appendThreadItem();
+
 };
 
 #endif // TODOLIST_H

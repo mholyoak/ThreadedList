@@ -23,6 +23,11 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
+    toDoList.runThread();
 
-    return app.exec();
+    auto rVal = app.exec();
+
+    toDoList.stopThread();
+
+    return rVal;
 }
