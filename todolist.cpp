@@ -34,13 +34,19 @@ bool ToDoList::setItemAt(int index, const ToDoItem &item)
 
 void ToDoList::appendItem()
 {
+    appendItemDescHandle(false, "");
+}
+
+void ToDoList::appendItemDescHandle(bool done, QString desc)
+{
     emit preItemAppended();
 
     auto threadId = std::this_thread::get_id();
     std::cout << "appendItem ThreadID: " << threadId << std::endl;
 
     ToDoItem item;
-    item.done = false;
+    item.done = done;
+    item.description = desc;
     mItems.append(item);
 
     emit postItemAppended();
@@ -66,7 +72,7 @@ void ToDoList::removeCompletedItems()
 
 void ToDoList::runThread()
 {
-    connect(this, &ToDoList::appendThreadItem, this, &ToDoList::appendItem);
+    connect(this, &ToDoList::appendItemDescSignal, this, &ToDoList::appendItemDescHandle);
 
     mThread = std::make_shared<std::thread>(&ToDoList::execute, this);
 }
@@ -82,15 +88,16 @@ void ToDoList::stopThread()
     }
 }
 
-
 // Thread Method
 void ToDoList::execute ()
 {
-    for (int x = 0; x < 20 && !mTerminateThread; x++)
+    for (int x = 0; !mTerminateThread; x++)
     {
         std::this_thread::sleep_for (std::chrono::seconds(5));
         auto threadId = std::this_thread::get_id();
         std::cout << "Thread add Item ThreadID: " << threadId << std::endl;
-        emit appendThreadItem();
+        std::string desc = "New Thread Item " + std::to_string(x);
+
+        emit appendItemDescSignal(false, desc.c_str());
     }
 }

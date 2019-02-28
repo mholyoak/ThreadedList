@@ -32,10 +32,13 @@ signals:
     void preItemRemoved(int index);
     void postItemRemoved();
 
+    void appendItemDescSignal(bool done, QString desc);
+
 public slots:
     void appendItem();
     void removeCompletedItems();
 
+    void appendItemDescHandle(bool done, QString desc);
 private:
     bool    mTerminateThread;
     std::shared_ptr<std::thread> mThread;
@@ -43,9 +46,6 @@ private:
 
     // Thread Method
     void execute ();
-
-signals:
-    void appendThreadItem();
 
 };
 
