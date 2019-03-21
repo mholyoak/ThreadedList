@@ -42,7 +42,7 @@ void ToDoList::appendItemDescHandle(bool done, QString desc)
     emit preItemAppended();
 
     auto threadId = std::this_thread::get_id();
-    std::cout << "appendItem ThreadID: " << threadId << std::endl;
+    std::cout << "ThreadID: " << threadId << " UI Thread add Item '" << desc.toStdString() << "'" << std::endl;
 
     ToDoItem item;
     item.done = done;
@@ -95,8 +95,8 @@ void ToDoList::execute ()
     {
         std::this_thread::sleep_for (std::chrono::seconds(5));
         auto threadId = std::this_thread::get_id();
-        std::cout << "Thread add Item ThreadID: " << threadId << std::endl;
         std::string desc = "New Thread Item " + std::to_string(x);
+        std::cout << "ThreadID: " << threadId << " Secondary thread add Item '" << desc << "'" << std::endl;
 
         emit appendItemDescSignal(false, desc.c_str());
     }
